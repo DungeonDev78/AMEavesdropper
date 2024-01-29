@@ -85,6 +85,17 @@ struct LogsView: View {
     }
 }
 
+extension LogsView {
+    
+    static func present() {
+        let topVC = UIViewController.topMostViewController()
+        let swiftUIView = LogsView(logs: Eavesdropper.getLogs())
+        let viewCtrl = UIHostingController(rootView: swiftUIView)
+        
+        topVC?.present(viewCtrl, animated: true)
+    }
+}
+
 struct LogsView_Previews: PreviewProvider {
     static var previews: some View {
         LogsView(logs: LogModel.examples)

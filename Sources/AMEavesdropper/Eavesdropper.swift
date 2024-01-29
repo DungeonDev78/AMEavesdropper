@@ -70,7 +70,7 @@ internal extension EavesdropperManager {
     }
     
     func presentSessionList() {
-        SessionListVC.presentController()
+        LogsView.present()
     }
     
     func createTextualLog() -> String {
