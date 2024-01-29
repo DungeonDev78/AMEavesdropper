@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// Test comment
 public enum RecordingStrategy {
     
     case persistent

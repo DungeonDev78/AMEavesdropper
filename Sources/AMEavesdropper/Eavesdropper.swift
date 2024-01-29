@@ -25,7 +25,7 @@ public class EavesdropperManager {
     
     public var shakeToPresentLogs = false
     
-    var logs = [LogModel]()
+    private var logs = [LogModel]()
     
     private init() {
         currentSession = CurrentSessionModel()
@@ -64,6 +64,10 @@ public class EavesdropperManager {
 
 // MARK: - Internal
 internal extension EavesdropperManager {
+    
+    func getLogs() -> [LogModel] {
+        logs
+    }
     
     func presentSessionList() {
         SessionListVC.presentController()

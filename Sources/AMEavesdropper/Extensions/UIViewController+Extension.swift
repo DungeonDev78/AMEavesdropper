@@ -16,7 +16,9 @@ extension UIViewController {
             return keyWindow?.rootViewController?.topMostViewController()
         }
         
-        return UIApplication.shared.keyWindow?.rootViewController?.topMostViewController()
+        let keyWindow = UIApplication.shared.keyWindowInConnectedScenes
+        
+        return keyWindow?.rootViewController?.topMostViewController()
     }
     
     func topMostViewController() -> UIViewController? {
