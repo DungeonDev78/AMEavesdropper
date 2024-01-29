@@ -5,6 +5,7 @@
 //
 
 import SwiftUI
+import Combine
 
 struct LogsView: View {
     
@@ -12,6 +13,8 @@ struct LogsView: View {
     @State private var selectedLogs: [LogModel] = [LogModel]()
     @State var canShowPanel = false
     @Environment(\.colorScheme) private var colorScheme
+    
+    @State var cancellables = Set<AnyCancellable>()
     
     func bgColor(log: LogModel) -> Color {
         if selectedLogs.contains(where: { $0.id == log .id }) {
@@ -22,29 +25,42 @@ struct LogsView: View {
     }
     
     var body: some View {
+        
         NavigationView {
-            VStack {
-                    
-                List(logs) { log in
-                    Text(log.message ?? "---")
-                        .font(.caption)
-                        .listRowBackground(bgColor(log: log))
-                        .onTapGesture {
-                            toggle(log: log)
+            
+            ZStack {
+                ScrollView {
+                    VStack(spacing: 0) {
+                        ForEach(logs) { log in
+                            ZStack {
+                                bgColor(log: log)
+                                VStack {
+                                    Text(log.message ?? "---")
+                                        .font(.caption)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .padding(8)
+                                    
+                                    Divider()
+                                }
+                                
+                                Color.black.opacity(0.001)
+                                    .onTapGesture {
+                                        toggle(log: log)
+                                    }
+                            }
                         }
                     }
-                if canShowPanel {
-                    HStack {
-                        Text("Selected count: \(selectedLogs.count)")
-                        Spacer()
-                        Button {
-                            selectedLogs = []
-                            checkPanelStatus()
-                        } label: {
-                            Image(systemName: "trash")
-                        }
+                }
+                
+                VStack {
+                    Spacer()
+                    // Selected logs view
+                    SelectedLogsView(selectedLogs: $selectedLogs) {
+                        updatePanelStatus()
                     }
-                    .padding()
+                    .edgesIgnoringSafeArea(.all)
+                    .frame(height: 80)
+                    .offset(y: canShowPanel ? 0 : 200)
                 }
             }
             .navigationBarTitle("Log List", displayMode: .inline)
@@ -59,7 +75,6 @@ struct LogsView: View {
             .navigationBarItems(
                 leading:
                     Button(action: {
-                        print("SHARE")
                         logs.reverse()
                     }, label: {
                         Image(systemName: "arrow.up.arrow.down")
@@ -75,10 +90,10 @@ struct LogsView: View {
             selectedLogs.append(log)
         }
         
-        checkPanelStatus()
+        updatePanelStatus()
     }
     
-    func checkPanelStatus() {
+    func updatePanelStatus() {
         withAnimation {
             canShowPanel = !selectedLogs.isEmpty
         }

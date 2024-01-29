@@ -26,11 +26,27 @@ class LogModel: Codable, Identifiable {
 extension LogModel {
     static var examples: [LogModel] {
         let sessionID = UUID()
-        let log01 = LogModel(message: "AppDelegate: UIResponder, UIApplicationDelegate", sessionID: sessionID)
-        let log02 = LogModel(message: "It seems like you're missing a particular simulator version. I faced this error before. I've installed two XCode versions:", sessionID: sessionID)
-        let log03 = LogModel(message: "Response: {\"Success\"}", sessionID: sessionID)
-        let log04 = LogModel(message: "Primo log per prova", sessionID: sessionID)
-        let log05 = LogModel(message: "You can also use the localized case insensitive comparison between two strings function and it returns Bool", sessionID: sessionID)
-        return [log01, log02, log03, log04, log05]
+        return [
+            LogModel(message: "AppDelegate: UIResponder, UIApplicationDelegate", sessionID: sessionID),
+            LogModel(message: "ViewController: ViewDidLoad Completed", sessionID: sessionID),
+            LogModel(message: "User Logged In", sessionID: sessionID),
+            LogModel(message: "Data Loaded from Database", sessionID: sessionID),
+            LogModel(message: "Error: Network Unreachable", sessionID: sessionID),
+            LogModel(message: "User Profile Updated", sessionID: sessionID),
+            LogModel(message: "Checkout Process Started", sessionID: sessionID),
+            LogModel(message: "Payment Successful", sessionID: sessionID),
+            LogModel(message: "Logout Completed", sessionID: sessionID),
+            LogModel(message: "App Entered Background", sessionID: sessionID),
+            LogModel(message: "App Entered Foreground", sessionID: sessionID),
+            LogModel(message: "Received Push Notification", sessionID: sessionID),
+            LogModel(message: "User Reached Level 5", sessionID: sessionID),
+            LogModel(message: "Settings Changed", sessionID: sessionID),
+            LogModel(message: "New Content Available", sessionID: sessionID),
+            LogModel(message: "{\"event\": \"User Completed Tutorial\", \"status\": \"success\"}", sessionID: sessionID),
+            LogModel(message: "{\"event\": \"Database Migration Started\", \"progress\": \"0%\"}", sessionID: sessionID),
+            LogModel(message: "{\"event\": \"Database Migration Completed\", \"progress\": \"100%\"}", sessionID: sessionID),
+            LogModel(message: "{\"user\": \"New User Registered\", \"id\": \"12345\"}", sessionID: sessionID),
+            LogModel(message: "{\"system\": \"Shutdown Initiated\", \"timestamp\": \"2023-01-01T12:00:00Z\"}", sessionID: sessionID)
+        ]
     }
 }
