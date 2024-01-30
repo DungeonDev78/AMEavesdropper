@@ -93,7 +93,7 @@ public class EavesdropperManager {
 internal extension EavesdropperManager {
     
     func getLogs() -> [LogModel] {
-        logs
+        logs.reversed()
     }
     
     func presentSessionList() {

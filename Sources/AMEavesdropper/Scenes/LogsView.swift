@@ -18,7 +18,7 @@ struct LogsView: View {
     @State var logs: [LogModel]
     @State private var selectedLogs: [LogModel] = [LogModel]()
     @State var canShowPanel = false
-    @State private var exportOrder = ExportOrder.ascending
+    @State private var exportOrder = ExportOrder.descending
     
     var body: some View {
         
