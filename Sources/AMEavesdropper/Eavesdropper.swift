@@ -70,7 +70,6 @@ internal class EavesdropperManager {
             setvbuf(stdout, nil, _IONBF, 0)
 
             dup2(STDOUT_FILENO, self.outputPipe.fileHandleForWriting.fileDescriptor)
-            print(STDOUT_FILENO)
             
             dup2(self.inputPipe.fileHandleForWriting.fileDescriptor, STDOUT_FILENO)
             dup2(self.inputPipe.fileHandleForWriting.fileDescriptor, STDERR_FILENO)
