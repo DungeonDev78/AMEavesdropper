@@ -55,4 +55,4 @@ This method configures and initiates a listening process that can be triggered b
 #### Example
 
 ```swift
-MyListener.startListening(recordingStrategy: .volatile, shakeToPresent: false)
+Eavesdropper.startListening(recordingStrategy: .volatile, shakeToPresent: false)
