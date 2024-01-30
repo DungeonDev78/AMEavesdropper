@@ -67,7 +67,7 @@ struct LogsView: View {
             .navigationBarItems(
                 trailing:
                     Button(action: {
-                        print("SHARE")
+                        exportLogs()
                     }, label: {
                         Image(systemName: "square.and.arrow.up")
                     })
@@ -80,6 +80,9 @@ struct LogsView: View {
                         Image(systemName: "arrow.up.arrow.down")
                     })
             )
+            .onAppear {
+                print("\(Self.Type.self) presented")
+            }
         }
     }
 }
