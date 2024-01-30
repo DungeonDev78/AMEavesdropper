@@ -8,7 +8,34 @@
 
 import UIKit
 
-public let Eavesdropper = EavesdropperManager.shared
+
+
+/// Public APIs
+public struct Eavesdropper {
+    
+    /// Starts listening for specific events or conditions to initiate a process based on the specified recording strategy.
+    ///
+    /// This method configures and initiates a listening process, which can be triggered by various events or conditions, such as a shake gesture. The behavior of the listening process is determined by the `recordingStrategy` parameter.
+    ///
+    /// - Parameters:
+    ///   - recordingStrategy: The strategy to use for recording events. Options are `.volatile` and `.persistent`. The default value is `.volatile`. **RecordingStrategy is not used right now** but it's listed here for future development.
+    ///     - `.volatile`: Indicates that events are stored temporarily and not saved persistently.
+    ///     - `.persistent`: Indicates that events are stored and saved persistently, allowing for retrieval at a later time.
+    ///   - shakeToPresent: A Boolean value that determines whether shaking the device will trigger the presentation of a specific UI or action. The default value is `true`, meaning that shaking the device will initiate the process. If set to `false`, the shake gesture will not trigger the process.
+    ///
+    /// Usage:
+    /// Call this method to start the listening process with the desired recording strategy and shake gesture behavior. For instance, you might call `startListening` during the app's initialization phase if you want to begin monitoring for certain events right away.
+    ///
+    /// Example:
+    /// ```
+    /// MyListener.startListening(recordingStrategy: .volatile, shakeToPresent: false)
+    /// ```
+    static public func startListening(recordingStrategy: RecordingStrategy = .volatile,
+                                      shakeToPresent: Bool = true) {
+        EavesdropperManager.shared.startListening(recordingStrategy: recordingStrategy,
+                                                  shakeToPresent: shakeToPresent)
+    }
+}
 
 public class EavesdropperManager {
     
@@ -23,9 +50,9 @@ public class EavesdropperManager {
     
     private var recordingStrategy = RecordingStrategy.volatile
     
-    public var shakeToPresentLogs = false
+    internal var shakeToPresentLogs = false
     
-    var logs = [LogModel]()
+    private var logs = [LogModel]()
     
     private init() {
         currentSession = CurrentSessionModel()
@@ -33,7 +60,7 @@ public class EavesdropperManager {
         outputPipe = Pipe()
     }
     
-    public func startListening(recordingStrategy: RecordingStrategy = .volatile,
+    func startListening(recordingStrategy: RecordingStrategy = .volatile,
                                shakeToPresent: Bool = true) {
         
         self.recordingStrategy = recordingStrategy
@@ -65,11 +92,15 @@ public class EavesdropperManager {
 // MARK: - Internal
 internal extension EavesdropperManager {
     
-    func presentSessionList() {
-        SessionListVC.presentController()
+    func getLogs() -> [LogModel] {
+        logs
     }
     
-    func createTextualLog() -> String {
+    func presentSessionList() {
+        LogsView.present()
+    }
+    
+    func createTextualLog(for logs: [LogModel]) -> String {
        logs.compactMap{ $0.message }.map{ $0 + "\n" }.joined()
     }
 }
