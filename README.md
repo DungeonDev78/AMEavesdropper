@@ -1,11 +1,41 @@
 # Eavesdropper
 
-`Eavesdropper` is a public struct that provides functionalities for listening to specific events or conditions and initiating a process based on a chosen recording strategy.
 
-## Features
+`Eavesdropper` is a lightweight library that provides functionalities for listening to specific events of your app. It will record and present all the logs shown usually in the Xcode console. You can browse them, select and export. Just shake your device to present the log screen.
+
+## Installation
+Requirements:
+ - .iOS(.v13)
+
+### Swift Package Manager 
+1. In Xcode, open your project and navigate to File → Swift Packages → Add Package Dependency.
+2. Paste the repository URL (https://github.com/DungeonDev78/AMEavesdropper.git) and click Next.
+3. For Rules, select version.
+4. Click Finish.
+
+### Swift Package
+```swift
+.package(url: "https://github.com/DungeonDev78/AMEavesdropper.git", .upToNextMajor(from: "0.9.0"))
+```
+
+## Usage
+
+Once installed import the framework where needed, for example in the AppDelegate
+```swift
+#import AMEavesdropper
+```
+Then simply launch it using:
+```swift
+ Eavesdropper.startListening()
+```
+
+## APIs
 
 ### `startListening`
 
+```swift
+func startListening(recordingStrategy: _, shakeToPresent: _)
+```
 Starts the listening process for specific events or conditions.
 
 #### Usage
