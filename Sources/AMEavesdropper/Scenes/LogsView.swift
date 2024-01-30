@@ -5,24 +5,20 @@
 //
 
 import SwiftUI
-import Combine
 
 struct LogsView: View {
+    
+    enum ExportOrder {
+        case ascending
+        case descending
+    }
+    
+    @Environment(\.colorScheme) private var colorScheme
     
     @State var logs: [LogModel]
     @State private var selectedLogs: [LogModel] = [LogModel]()
     @State var canShowPanel = false
-    @Environment(\.colorScheme) private var colorScheme
-    
-    @State var cancellables = Set<AnyCancellable>()
-    
-    func bgColor(log: LogModel) -> Color {
-        if selectedLogs.contains(where: { $0.id == log .id }) {
-            return .green.opacity(0.3)
-        } else {
-            return colorScheme == .dark ? .white.opacity(0.1) : .white
-        }
-    }
+    @State private var exportOrder = ExportOrder.ascending
     
     var body: some View {
         
@@ -32,6 +28,7 @@ struct LogsView: View {
                 ScrollView {
                     VStack(spacing: 0) {
                         ForEach(logs) { log in
+                            // Log cell
                             ZStack {
                                 bgColor(log: log)
                                 VStack {
@@ -50,6 +47,10 @@ struct LogsView: View {
                             }
                         }
                     }
+                    
+                    // Spacer
+                    Color.clear
+                        .frame(height: 100)
                 }
                 
                 VStack {
@@ -63,6 +64,7 @@ struct LogsView: View {
                     .offset(y: canShowPanel ? 0 : 200)
                 }
             }
+            // Navigation bar configs
             .navigationBarTitle("Log List", displayMode: .inline)
             .navigationBarItems(
                 trailing:
@@ -75,14 +77,11 @@ struct LogsView: View {
             .navigationBarItems(
                 leading:
                     Button(action: {
-                        logs.reverse()
+                        updateLogOrder()
                     }, label: {
                         Image(systemName: "arrow.up.arrow.down")
                     })
             )
-            .onAppear {
-                print("\(Self.Type.self) presented")
-            }
         }
     }
 }
@@ -100,18 +99,58 @@ private extension LogsView {
         updatePanelStatus()
     }
     
+    func bgColor(log: LogModel) -> Color {
+        if selectedLogs.contains(where: { $0.id == log .id }) {
+            return .green.opacity(0.3)
+        } else {
+            return colorScheme == .dark ? .white.opacity(0.1) : .white
+        }
+    }
+    
     func updatePanelStatus() {
         withAnimation {
             canShowPanel = !selectedLogs.isEmpty
         }
     }
     
+    func updateLogOrder() {
+        
+        switch exportOrder {
+        case .ascending:
+            exportOrder = .descending
+            
+        case .descending:
+            exportOrder = .ascending
+        }
+        
+        order(logs: logs)
+    }
+    
     func exportLogs() {
-        let items = [EavesdropperManager.shared.createTextualLog(for: logs)]
+        
+        let items: [String]
+        
+        if !selectedLogs.isEmpty {
+            order(logs: selectedLogs)
+            items = [EavesdropperManager.shared.createTextualLog(for: selectedLogs)]
+        } else {
+            items = [EavesdropperManager.shared.createTextualLog(for: logs)]
+        }
+                
         let ac = UIActivityViewController(
             activityItems: items, applicationActivities: nil
         )
         UIViewController.topMostViewController()?.present(ac, animated: true)
+    }
+    
+    func order(logs: [LogModel]) {
+        switch exportOrder {
+        case .ascending:
+            self.logs.sort { $0.date ?? Date() < $1.date ?? Date()}
+            
+        case .descending:
+            self.logs.sort { $0.date ?? Date() > $1.date ?? Date()}
+        }
     }
 }
 
