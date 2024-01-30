@@ -35,7 +35,7 @@ public struct Eavesdropper {
     }
 }
 
-public class EavesdropperManager {
+internal class EavesdropperManager {
     
     // MARK: - Initialization
     static let shared = EavesdropperManager()
