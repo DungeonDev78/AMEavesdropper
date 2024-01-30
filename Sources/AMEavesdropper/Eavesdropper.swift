@@ -64,26 +64,21 @@ public class EavesdropperManager {
         self.recordingStrategy = recordingStrategy
         self.shakeToPresentLogs = shakeToPresent
         
-        let pipeReadHandle = inputPipe.fileHandleForReading
-        setvbuf(stdout, nil, _IONBF, 0)
-        
-        // From documentation
-        // dup2() makes newfd (new file descriptor) be the copy of oldfd (old file descriptor), closing newfd first if necessary.
-        
-        // Here we are copying the STDOUT file descriptor into our output pipe's file descriptor
-        // this is so we can write the strings back to STDOUT, so it can show up on the xcode console
-        dup2(STDOUT_FILENO, outputPipe.fileHandleForWriting.fileDescriptor)
-        
-        // In this case, the newFileDescriptor is the pipe's file descriptor and the old file descriptor is STDOUT_FILENO and STDERR_FILENO
-        
-        dup2(inputPipe.fileHandleForWriting.fileDescriptor, STDOUT_FILENO)
-        dup2(inputPipe.fileHandleForWriting.fileDescriptor, STDERR_FILENO)
-        
-        // Listen in to the readHandle notification
-        NotificationCenter.default.addObserver(self, selector: #selector(self.handlePipeNotification), name: FileHandle.readCompletionNotification, object: pipeReadHandle)
-        
-        // State that you want to be notified of any data coming across the pipe
-        pipeReadHandle.readInBackgroundAndNotify()
+        DispatchQueue.main.async {
+            
+            let pipeReadHandle = self.inputPipe.fileHandleForReading
+            setvbuf(stdout, nil, _IONBF, 0)
+
+            dup2(STDOUT_FILENO, self.outputPipe.fileHandleForWriting.fileDescriptor)
+            print(STDOUT_FILENO)
+            
+            dup2(self.inputPipe.fileHandleForWriting.fileDescriptor, STDOUT_FILENO)
+            dup2(self.inputPipe.fileHandleForWriting.fileDescriptor, STDERR_FILENO)
+            
+            NotificationCenter.default.addObserver(self, selector: #selector(self.handlePipeNotification), name: FileHandle.readCompletionNotification, object: pipeReadHandle)
+            
+            pipeReadHandle.readInBackgroundAndNotify()
+        }
     }
 }
 
