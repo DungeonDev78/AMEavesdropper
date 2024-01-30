@@ -28,7 +28,7 @@ public struct Eavesdropper {
     ///
     /// Example:
     /// ```
-    /// MyListener.startListening(recordingStrategy: .volatile, shakeToPresent: false)
+    /// Eavesdropper.startListening(recordingStrategy: .volatile, shakeToPresent: false)
     /// ```
     static public func startListening(recordingStrategy: RecordingStrategy = .volatile,
                                       shakeToPresent: Bool = true) {
