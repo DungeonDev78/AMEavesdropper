@@ -82,6 +82,10 @@ struct LogsView: View {
             )
         }
     }
+}
+
+// MARK: - Private
+private extension LogsView {
     
     func toggle(log: LogModel) {
         if let index = selectedLogs.firstIndex(where: { $0.id == log.id }) {
@@ -98,13 +102,22 @@ struct LogsView: View {
             canShowPanel = !selectedLogs.isEmpty
         }
     }
+    
+    func exportLogs() {
+        let items = [EavesdropperManager.shared.createTextualLog(for: logs)]
+        let ac = UIActivityViewController(
+            activityItems: items, applicationActivities: nil
+        )
+        UIViewController.topMostViewController()?.present(ac, animated: true)
+    }
 }
 
+// MARK: - Static
 extension LogsView {
     
     static func present() {
         let topVC = UIViewController.topMostViewController()
-        let swiftUIView = LogsView(logs: Eavesdropper.getLogs())
+        let swiftUIView = LogsView(logs: EavesdropperManager.shared.getLogs())
         let viewCtrl = UIHostingController(rootView: swiftUIView)
         
         topVC?.present(viewCtrl, animated: true)
