@@ -18,7 +18,23 @@ struct LogsView: View {
     @State var logs: [LogModel]
     @State private var selectedLogs: [LogModel] = [LogModel]()
     @State var canShowPanel = false
+    @State var canShowSearch = false
     @State private var exportOrder = ExportOrder.descending
+    @State private var searchText = ""
+    
+    var searchImage: Image {
+        canShowSearch ?
+        Image(systemName: "minus.magnifyingglass") :
+        Image(systemName: "plus.magnifyingglass")
+    }
+    
+    var shownLogs: [LogModel] {
+        if searchText.isEmpty {
+            return logs
+        } else {
+            return logs.filter { $0.message?.localizedCaseInsensitiveContains(searchText) ?? false }
+        }
+    }
     
     var body: some View {
         
@@ -27,7 +43,13 @@ struct LogsView: View {
             ZStack {
                 ScrollView {
                     VStack(spacing: 0) {
-                        ForEach(logs) { log in
+                        
+                        if canShowSearch {
+                           SearchView(searchText: $searchText)
+                                .frame(height: 70)
+                        }
+                        
+                        ForEach(shownLogs) { log in
                             // Log cell
                             ZStack {
                                 bgColor(log: log)
@@ -68,6 +90,7 @@ struct LogsView: View {
             .navigationBarTitle("Log List", displayMode: .inline)
             .navigationBarItems(
                 trailing:
+                    // Button Share
                     Button(action: {
                         exportLogs()
                     }, label: {
@@ -76,11 +99,24 @@ struct LogsView: View {
             )
             .navigationBarItems(
                 leading:
-                    Button(action: {
-                        updateLogOrder()
-                    }, label: {
-                        Image(systemName: "arrow.up.arrow.down")
-                    })
+                    HStack {
+                        // Button Sort
+                        Button(action: {
+                            updateLogOrder()
+                        }, label: {
+                            Image(systemName: "arrow.up.arrow.down")
+                        })
+                        // Button Search
+                        Button(action: {
+                            withAnimation {
+                                canShowSearch.toggle()
+                                searchText = ""
+                            }
+                        }, label: {
+                            searchImage
+                        })
+                    }
+                    
             )
         }
     }
@@ -123,7 +159,7 @@ private extension LogsView {
             exportOrder = .ascending
         }
         
-        order(logs: logs)
+        order(logs: shownLogs)
     }
     
     func exportLogs() {
@@ -134,7 +170,7 @@ private extension LogsView {
             order(logs: selectedLogs)
             items = [EavesdropperManager.shared.createTextualLog(for: selectedLogs)]
         } else {
-            items = [EavesdropperManager.shared.createTextualLog(for: logs)]
+            items = [EavesdropperManager.shared.createTextualLog(for: shownLogs)]
         }
                 
         let ac = UIActivityViewController(
