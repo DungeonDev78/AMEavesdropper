@@ -39,11 +39,7 @@ Then simply launch it using:
 
 ## APIs
 
-### `startListening`
-
-```swift
-func startListening(recordingStrategy: _, shakeToPresent: _)
-```
+### func `startListening(recordingStrategy: _, shakeToPresent: _)`
 Starts the listening process for specific events or conditions.
 
 #### Usage
@@ -64,6 +60,6 @@ This method configures and initiates a listening process that can be triggered b
 Eavesdropper.startListening(recordingStrategy: .volatile, shakeToPresent: false)
 ```
 
-#### License
+## License
 
 AMEavesdropper is released under the MIT License.
