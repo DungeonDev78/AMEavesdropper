@@ -22,6 +22,9 @@ struct LogsView: View {
     @State private var exportOrder = ExportOrder.descending
     @State private var searchText = ""
     
+    private let orderImgFilename = "arrow.up.arrow.down"
+    private let exportImgFilename = "square.and.arrow.up"
+    
     var searchImage: Image {
         canShowSearch ?
         Image(systemName: "minus.magnifyingglass") :
@@ -41,39 +44,45 @@ struct LogsView: View {
         NavigationView {
             
             ZStack {
-                ScrollView {
-                    VStack(spacing: 0) {
-                        
-                        if canShowSearch {
-                           SearchView(searchText: $searchText)
-                                .frame(height: 70)
-                        }
-                        
-                        ForEach(shownLogs) { log in
-                            // Log cell
-                            ZStack {
-                                bgColor(log: log)
-                                VStack {
-                                    Text(log.message ?? "---")
-                                        .font(.caption)
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                        .padding(8)
-                                    
-                                    Divider()
-                                }
-                                
-                                Color.black.opacity(0.001)
-                                    .onTapGesture {
-                                        toggle(log: log)
-                                    }
-                            }
-                        }
+                
+                VStack(spacing: 0) {
+                    // Search are
+                    if canShowSearch {
+                       SearchView(searchText: $searchText)
+                            .frame(height: 70)
                     }
                     
-                    // Spacer
-                    Color.clear
-                        .frame(height: 100)
+                    ScrollView {
+                        VStack(spacing: 0) {
+  
+                            ForEach(shownLogs) { log in
+                                // Log cell
+                                ZStack {
+                                    bgColor(log: log)
+                                    VStack {
+                                        AttributedLabel(
+                                            text: log.message ?? "---",
+                                            searchText: searchText)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .padding(8)
+                                        
+                                        Divider()
+                                    }
+                                    
+                                    Color.black.opacity(0.001)
+                                        .onTapGesture {
+                                            toggle(log: log)
+                                        }
+                                }
+                            }
+                        }
+                        
+                        // Bottom Spacer
+                        Color.clear
+                            .frame(height: 100)
+                    }
                 }
+               
                 
                 VStack {
                     Spacer()
@@ -94,7 +103,7 @@ struct LogsView: View {
                     Button(action: {
                         exportLogs()
                     }, label: {
-                        Image(systemName: "square.and.arrow.up")
+                        Image(systemName: exportImgFilename)
                     })
             )
             .navigationBarItems(
@@ -104,7 +113,7 @@ struct LogsView: View {
                         Button(action: {
                             updateLogOrder()
                         }, label: {
-                            Image(systemName: "arrow.up.arrow.down")
+                            Image(systemName: orderImgFilename)
                         })
                         // Button Search
                         Button(action: {

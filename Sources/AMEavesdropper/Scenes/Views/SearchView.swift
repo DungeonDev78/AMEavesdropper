@@ -9,11 +9,18 @@ import SwiftUI
 
 struct SearchView: View {
     
+    @Environment(\.colorScheme) private var colorScheme
+    
     @Binding var searchText: String
+    
+    var bgColorView: Color {
+        
+        Color.secondary.opacity(colorScheme == .dark ? 0.3 : 0.2)
+    }
 
     var body: some View {
         ZStack {
-            Color.secondary.opacity(0.2)
+            bgColorView
             ZStack(alignment: .trailing) {
                 TextField("Search log", text: $searchText)
                     .textFieldStyle(.roundedBorder)

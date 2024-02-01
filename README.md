@@ -15,12 +15,12 @@ Requirements:
 
 ### Swift Package
 ```swift
-.package(url: "https://github.com/DungeonDev78/AMEavesdropper.git", .upToNextMajor(from: "0.9.0"))
+.package(url: "https://github.com/DungeonDev78/AMEavesdropper.git", .upToNextMajor(from: "0.9.3"))
 ```
 
 ![Example](https://github.com/DungeonDev78/AMEavesdropper/blob/main/IMG/img002.jpeg?raw=true)
 
-![Example](https://github.com/DungeonDev78/AMEavesdropper/blob/main/IMG/img001.jpeg?raw=true)
+![Example](https://github.com/DungeonDev78/AMEavesdropper/blob/main/IMG/img001.jpg?raw=true)
 
 #### What's new
 - 0.9.2: added search/filter option for logs

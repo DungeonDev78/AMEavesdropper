@@ -107,7 +107,8 @@ private extension EavesdropperManager {
         inputPipe.fileHandleForReading.readInBackgroundAndNotify()
         
         if let data = notification.userInfo?[NSFileHandleNotificationDataItem] as? Data,
-           let str = String(data: data, encoding: String.Encoding.utf8) {
+           let str = String(data: data, encoding: String.Encoding.utf8),
+            !str.isEmpty, str != "\n" {
             
             // Add a log to the array
             let logModel = LogModel(message: str, sessionID: currentSession.sessionID)
