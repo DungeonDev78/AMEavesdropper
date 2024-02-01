@@ -23,6 +23,7 @@ Requirements:
 ![Example](https://github.com/DungeonDev78/AMEavesdropper/blob/main/IMG/img001.jpg?raw=true)
 
 #### What's new
+- 0.9.3: Improved search with highlights on text. Better positioning of search text area.
 - 0.9.2: added search/filter option for logs
 - 0.9.1: Fixed bug for very large logs
 
