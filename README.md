@@ -15,7 +15,7 @@ Requirements:
 
 ### Swift Package
 ```swift
-.package(url: "https://github.com/DungeonDev78/AMEavesdropper.git", .upToNextMajor(from: "0.9.3"))
+.package(url: "https://github.com/DungeonDev78/AMEavesdropper.git", .upToNextMajor(from: "0.9.4"))
 ```
 
 ![Example](https://github.com/DungeonDev78/AMEavesdropper/blob/main/IMG/img002.jpeg?raw=true)
@@ -23,6 +23,7 @@ Requirements:
 ![Example](https://github.com/DungeonDev78/AMEavesdropper/blob/main/IMG/img001.jpg?raw=true)
 
 #### What's new
+- 0.9.4: Added present(on:) API.
 - 0.9.3: Improved search with highlights on text. Better positioning of search text area.
 - 0.9.2: added search/filter option for logs
 - 0.9.1: Fixed bug for very large logs
@@ -59,6 +60,24 @@ This method configures and initiates a listening process that can be triggered b
 
 ```swift
 Eavesdropper.startListening(recordingStrategy: .volatile, shakeToPresent: false)
+```
+
+### func `present(on:)`
+Presents the Log list controller in on a specific UIViewController.
+
+#### Usage
+This method presents the logs controller modelly over another controller. It can be used to show the logs if you do not want to use the shake gesture or if that gesture is already used for another funcionality in your app.
+
+#### Example
+
+At the start of your app:
+```swift
+Eavesdropper.startListening(shakeToPresent: false)
+```
+
+In a specific view controller:
+```swift
+Eavesdropper.present(on self)
 ```
 
 ## License

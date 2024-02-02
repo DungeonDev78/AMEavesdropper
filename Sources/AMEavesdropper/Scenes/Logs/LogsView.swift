@@ -205,9 +205,16 @@ extension LogsView {
     static func present() {
         let topVC = UIViewController.topMostViewController()
         let swiftUIView = LogsView(logs: EavesdropperManager.shared.getLogs())
-        let viewCtrl = UIHostingController(rootView: swiftUIView)
+        let hostingVC = UIHostingController(rootView: swiftUIView)
         
-        topVC?.present(viewCtrl, animated: true)
+        topVC?.present(hostingVC, animated: true)
+    }
+    
+    static func present(on parentVC: UIViewController) {
+        let swiftUIView = LogsView(logs: EavesdropperManager.shared.getLogs())
+        let hostingVC = UIHostingController(rootView: swiftUIView)
+        
+        parentVC.present(hostingVC, animated: true)
     }
 }
 

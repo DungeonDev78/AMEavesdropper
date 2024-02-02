@@ -6,8 +6,6 @@
 
 import UIKit
 
-
-
 /// Public APIs
 public struct Eavesdropper {
     
@@ -32,6 +30,22 @@ public struct Eavesdropper {
                                       shakeToPresent: Bool = true) {
         EavesdropperManager.shared.startListening(recordingStrategy: recordingStrategy,
                                                   shakeToPresent: shakeToPresent)
+    }
+    
+    /// Presents the Eavesdropper Logs interface on the specified view controller.
+    ///
+    /// This static method utilizes the shared instance of `EavesdropperManager` to present its UI on the provided `UIViewController`. It should be used when you want to display the Eavesdropper's user interface as part of the user's interaction within a specific context in your app.
+    ///
+    /// - Parameters:
+    ///   - parentVC: The `UIViewController` on which the Eavesdropper UI should be presented. This view controller acts as the parent for the Eavesdropper's interface, ensuring that the UI is added to the appropriate place in your app's view hierarchy.
+    ///
+    /// Usage Example:
+    /// ```
+    /// Eavesdropper.present(on: self)
+    /// ```
+    /// In this example, `self` refers to the current view controller instance in which you want to present the Eavesdropper UI.
+    static public func present(on parentVC: UIViewController) {
+        EavesdropperManager.shared.present(on: parentVC)
     }
 }
 
@@ -59,7 +73,7 @@ internal class EavesdropperManager {
     }
     
     func startListening(recordingStrategy: RecordingStrategy = .volatile,
-                               shakeToPresent: Bool = true) {
+                        shakeToPresent: Bool = true) {
         
         self.recordingStrategy = recordingStrategy
         self.shakeToPresentLogs = shakeToPresent
@@ -68,7 +82,7 @@ internal class EavesdropperManager {
             
             let pipeReadHandle = self.inputPipe.fileHandleForReading
             setvbuf(stdout, nil, _IONBF, 0)
-
+            
             dup2(STDOUT_FILENO, self.outputPipe.fileHandleForWriting.fileDescriptor)
             
             dup2(self.inputPipe.fileHandleForWriting.fileDescriptor, STDOUT_FILENO)
@@ -78,6 +92,10 @@ internal class EavesdropperManager {
             
             pipeReadHandle.readInBackgroundAndNotify()
         }
+    }
+    
+    func present(on parentVC: UIViewController) {
+        LogsView.present(on: parentVC)
     }
 }
 
@@ -93,7 +111,7 @@ internal extension EavesdropperManager {
     }
     
     func createTextualLog(for logs: [LogModel]) -> String {
-       logs.compactMap{ $0.message }.map{ $0 + "\n" }.joined()
+        logs.compactMap{ $0.message }.map{ $0 + "\n" }.joined()
     }
 }
 
@@ -101,27 +119,16 @@ internal extension EavesdropperManager {
 private extension EavesdropperManager {
     
     @objc private func handlePipeNotification(notification: Notification) {
-        //note you have to continuously call this when you get a message
-        //see this from documentation:
-        //Note that this method does not cause a continuous stream of notifications to be sent. If you wish to keep getting notified, you’ll also need to call readInBackgroundAndNotify() in your observer method.
         inputPipe.fileHandleForReading.readInBackgroundAndNotify()
         
         if let data = notification.userInfo?[NSFileHandleNotificationDataItem] as? Data,
            let str = String(data: data, encoding: String.Encoding.utf8),
-            !str.isEmpty, str != "\n" {
+           !str.isEmpty, str != "\n" {
             
-            // Add a log to the array
             let logModel = LogModel(message: str, sessionID: currentSession.sessionID)
             logs.append(logModel)
             
-            //write the data back into the output pipe. the output pipe's write file descriptor points to STDOUT. this allows the logs to show up on the xcode console
             outputPipe.fileHandleForWriting.write(data)
-            
-            // `str` here is the log/contents of the print statement
-            //if you would like to route your print statements to the UI: make
-            //sure to subscribe to this notification in your VC and update the UITextView.
-            //Or if you wanted to send your print statements to the server, then
-            //you could do this in your notification handler in the app delegate.
         }
     }
 }
